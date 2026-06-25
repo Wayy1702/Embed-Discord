@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Banner Teks Smoke</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Rajdhani:wght@600;700&display=swap');
+
+  :root {
+    --crimson: #c81e2c;
+    --gold: #c8941f;
+    --gold-bright: #b8860b;
+    --bg-black: #ffffff;
+  }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    overflow: hidden;
+    font-family: 'Rajdhani', sans-serif;
+  }
+
+  .banner-wrap {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+  }
+
+  .banner-track {
+    position: relative;
+    width: 100%;
+    height: 96px;
+    background: var(--bg-black);
+    border-top: 2px solid var(--gold);
+    border-bottom: 2px solid var(--gold);
+    box-shadow:
+      0 0 14px rgba(200, 30, 44, 0.5),
+      0 0 26px rgba(240, 193, 75, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    overflow: hidden;
+  }
+
+  /* ===== Lapisan asap hitam ===== */
+  .smoke-layer {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .smoke-blob {
+    position: absolute;
+    bottom: -40%;
+    width: 180px;
+    height: 180px;
+    background: radial-gradient(circle, rgba(20,20,20,0.32) 0%, rgba(20,20,20,0.18) 40%, transparent 75%);
+    border-radius: 50%;
+    filter: blur(10px);
+    opacity: 0;
+    animation: smokeRise linear infinite;
+  }
+
+  @keyframes smokeRise {
+    0%   { transform: translateY(0) translateX(0) scale(0.7); opacity: 0; }
+    15%  { opacity: 0.55; }
+    50%  { transform: translateY(-60%) translateX(10px) scale(1.15); opacity: 0.4; }
+    100% { transform: translateY(-130%) translateX(-15px) scale(1.4); opacity: 0; }
+  }
+
+  /* Lapisan vignette gelap di tepi kiri-kanan biar makin nyatu/dramatis */
+  .vignette {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background:
+      linear-gradient(90deg, rgba(0,0,0,0.12) 0%, transparent 20%, transparent 80%, rgba(0,0,0,0.12) 100%);
+    pointer-events: none;
+  }
+
+  /* ===== Teks ===== */
+  .text-area {
+    position: relative;
+    z-index: 6;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 0 24px 0 48px;
+  }
+
+  .icon-spark {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    animation: sparkPulse 1.6s ease-in-out infinite;
+  }
+  .icon-spark svg { width: 100%; height: 100%; }
+
+  @keyframes sparkPulse {
+    0%, 100% { opacity: 0.6; transform: scale(0.9); }
+    50% { opacity: 1; transform: scale(1.1); }
+  }
+
+  .text-area h1 {
+    margin: 0;
+    font-family: 'Cinzel', serif;
+    font-weight: 900;
+    font-size: 28px;
+    color: #1a0408;
+    letter-spacing: 1px;
+    white-space: nowrap;
+    text-shadow:
+      0 0 6px rgba(200, 30, 44, 0.35),
+      1px 1px 0 rgba(0,0,0,0.15);
+    position: relative;
+  }
+
+  .text-area h1 .highlight {
+    color: var(--crimson);
+    text-shadow: 0 0 8px rgba(200,30,44,0.4);
+  }
+
+  .text-area h1.txt-out {
+    animation: slashOut 0.35s ease-in forwards;
+  }
+  .text-area h1.txt-in {
+    animation: slashIn 0.4s ease-out forwards;
+  }
+
+  @keyframes slashOut {
+    0%   { opacity: 1; transform: translateX(0) skewX(0deg); filter: blur(0px); }
+    100% { opacity: 0; transform: translateX(18px) skewX(-8deg); filter: blur(3px); }
+  }
+  @keyframes slashIn {
+    0%   { opacity: 0; transform: translateX(-18px) skewX(8deg); filter: blur(3px); }
+    100% { opacity: 1; transform: translateX(0) skewX(0deg); filter: blur(0px); }
+  }
+
+  .slash-flash {
+    position: absolute;
+    left: 0;
+    top: -10%;
+    width: 3px;
+    height: 120%;
+    background: linear-gradient(180deg, transparent, var(--crimson), transparent);
+    box-shadow: 0 0 10px rgba(200,30,44,0.6);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 7;
+  }
+  .slash-flash.active {
+    animation: slashFlash 0.4s ease-out forwards;
+  }
+  @keyframes slashFlash {
+    0%   { opacity: 0; left: -10px; transform: rotate(18deg); }
+    40%  { opacity: 1; }
+    100% { opacity: 0; left: 100%; transform: rotate(18deg); }
+  }
+
+  /* Sweep kilau melintas seluruh banner */
+  .scanline {
+    position: absolute;
+    top: 0;
+    left: -40%;
+    width: 20%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(200,30,44,0.08), transparent);
+    transform: skewX(-20deg);
+    animation: sweep 5.5s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 5;
+  }
+
+  @keyframes sweep {
+    0%   { left: -40%; }
+    100% { left: 130%; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="banner-wrap">
+    <div class="banner-track">
+
+      <div class="smoke-layer" id="smokeLayer"></div>
+      <div class="vignette"></div>
+
+      <div class="text-area">
+        <div class="icon-spark">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M12 2 L14 9 L21 9 L15.5 13.5 L17.5 21 L12 16.5 L6.5 21 L8.5 13.5 L3 9 L10 9 Z"
+                  fill="#c81e2c" stroke="#8a0f1c" stroke-width="0.6"/>
+          </svg>
+        </div>
+        <h1 id="dynamicText">FOLLOW <span class="highlight">MY STREAM</span></h1>
+        <div class="slash-flash" id="slashFlash"></div>
+      </div>
+
+      <div class="scanline"></div>
+
+    </div>
+  </div>
+
+  <script>
+    // =========================================================
+    // PESAN YANG BERGANTIAN — tambah/ganti baris sesuai kebutuhan.
+    // Pakai <span class="highlight">...</span> untuk sorot emas.
+    // =========================================================
+    const rotatingTexts = [
+      'FOLLOW <span class="highlight">MY STREAM</span>',
+      '<span class="highlight">SUPPORT</span> VIA LINK BIO',
+      'JOIN THE <span class="highlight">SQUAD</span> NOW',
+      'TAP <span class="highlight">FOLLOW</span> BEFORE YOU GO'
+    ];
+    const DURATION_PER_TEXT = 4000; // berapa lama (ms) tiap teks tampil sebelum ganti
+    // =========================================================
+
+    let textIndex = 0;
+    const textEl = document.getElementById('dynamicText');
+    const flashEl = document.getElementById('slashFlash');
+
+    function rotateText() {
+      textEl.classList.add('txt-out');
+      flashEl.classList.add('active');
+
+      setTimeout(() => {
+        textIndex = (textIndex + 1) % rotatingTexts.length;
+        textEl.innerHTML = rotatingTexts[textIndex];
+        textEl.classList.remove('txt-out');
+        textEl.classList.add('txt-in');
+
+        setTimeout(() => {
+          textEl.classList.remove('txt-in');
+          flashEl.classList.remove('active');
+        }, 420);
+      }, 350);
+    }
+
+    setInterval(rotateText, DURATION_PER_TEXT);
+
+    // =========================================================
+    // GENERATE GUMPALAN ASAP — otomatis, jumlah & posisi diatur di sini
+    // =========================================================
+    const SMOKE_COUNT = 9;
+    const smokeLayer = document.getElementById('smokeLayer');
+
+    for (let i = 0; i < SMOKE_COUNT; i++) {
+      const blob = document.createElement('div');
+      blob.className = 'smoke-blob';
+      const leftPos = Math.random() * 100;
+      const size = 120 + Math.random() * 100;
+      const duration = 7 + Math.random() * 6;
+      const delay = Math.random() * duration;
+
+      blob.style.left = leftPos + '%';
+      blob.style.width = size + 'px';
+      blob.style.height = size + 'px';
+      blob.style.animationDuration = duration + 's';
+      blob.style.animationDelay = '-' + delay + 's';
+
+      smokeLayer.appendChild(blob);
+    }
+  </script>
+
+</body>
+</html>
